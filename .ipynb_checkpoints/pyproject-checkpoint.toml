@@ -1,0 +1,14 @@
+[project]
+name = "video-game-2"
+version = "0.1.0"
+description = "A 2D vertical platformer built with Python and Pygame, featuring modular object-oriented architecture, camera tracking, physics simulation, and JSON-based score persistence."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pygame>=2.6.1",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.15.2",
+]
