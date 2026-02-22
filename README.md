@@ -99,7 +99,7 @@ This project demonstrates:
 
 ## Author
 
-Stephan Stefanov Pentchev
+Stephan Pentchev
 Master's in Business Analytics and Data Science
 
 Developed as part of Python Data Analysis II coursework project.
