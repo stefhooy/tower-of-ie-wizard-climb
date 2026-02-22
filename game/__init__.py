@@ -7,7 +7,7 @@ and state management into separate files.
 """
 
 __all__ = [
-    "app"
+    "app",
     "player",
     "platform",
     "camera",
