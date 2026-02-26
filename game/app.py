@@ -1,6 +1,7 @@
 import os
 import pygame
 from typing import List, Optional
+from .audio import init_audio, play_music
 
 #Import the configuration/constants from settings.py
 from .settings import (
@@ -45,6 +46,8 @@ class GameApp:
     """
     def __init__(self) -> None:
         pygame.init()
+        init_audio()
+        play_music()
         self.screen = pygame.display.set_mode((SCREEN_W, SCREEN_H))
         pygame.display.set_caption(WINDOW_TITLE)
         #Used to control FPS and compute delta time (dt)
