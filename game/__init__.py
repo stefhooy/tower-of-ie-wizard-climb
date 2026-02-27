@@ -16,4 +16,5 @@ __all__ = [
     "scores",
     "utils",
     "settings",
+    "audio",
 ]
