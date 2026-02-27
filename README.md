@@ -1,28 +1,35 @@
----
+# 🧙‍♂️ Tower of IE: The Wizard Climb
 
-# Tower of IE: The Wizard Climb
-
-**Tower of IE: The Wizard Climb** is a 2D vertical platformer built with **Python** and **Pygame**.
-
-In this game, the player controls a wizard climbing a magical tower by jumping across platforms while the camera follows vertically. The objective is to reach the flag at the top in the fastest possible time without falling.
-
-The game also includes background music integrated through Pygame’s audio system to enhance immersion.
-
-This project focuses on clean architecture, modular design, and object-oriented programming principles.
+<p align="center">
+  <b>A 2D fantasy vertical platformer built with Python & Pygame</b><br>
+  Designed with modular object-oriented architecture and clean package structure.
+</p>
 
 ---
 
-## Project Architecture
+## 🎮 Game Overview
 
-The game was originally developed as a single script and later refactored into a modular package structure for better readability, scalability, and maintainability.
+**Tower of IE: The Wizard Climb** is a 2D vertical platformer where the player controls a wizard climbing a magical tower by jumping across platforms while the camera follows dynamically.
+
+The objective is simple:
+
+> Reach the glowing flag at the top in the fastest possible time without falling.
+
+The game features real-time physics, collision detection, dynamic platform creation (editor mode), persistent score tracking, and looping background music for a more immersive experience.
+
+---
+
+## 🏗 Architecture
+
+The project was initially developed as a single script and later refactored into a modular package structure to improve readability, maintainability, and scalability.
 
 ### Core Components
 
 **Player**
-Handles movement, gravity, velocity, jumping mechanics, and collision detection.
+Handles movement, gravity, velocity, jumping mechanics, sprite rendering, and collision detection.
 
 **Platform**
-Represents static surfaces the player can land on.
+Represents static surfaces that the player can land on.
 
 **Camera**
 Manages vertical scrolling and transforms world coordinates into screen coordinates.
@@ -31,16 +38,16 @@ Manages vertical scrolling and transforms world coordinates into screen coordina
 Controls the main loop, state transitions (menu, name input, scoreboard, gameplay), and rendering pipeline.
 
 **Score System**
-Uses JSON persistence to store and rank completion times.
+Stores completion times in a JSON file and ranks players by fastest time.
 
-**Audio System**
-Implemented in `audio.py`, responsible for initializing `pygame.mixer` and playing looping background music from the `assets/` folder.
+**Audio System (`audio.py`)**
+Initializes `pygame.mixer` and plays looping background music from the `assets/` folder.
 
 ---
 
-## Project Structure
+## 📂 Project Structure
 
-```text
+```text id="n93krv"
 tower-of-ie-wizard-climb/
 │
 ├── assets/                 # Backgrounds, sprites, fonts, music, scores.json
@@ -51,7 +58,7 @@ tower-of-ie-wizard-climb/
 │   ├── utils.py
 │   ├── scores.py
 │   ├── effects.py
-│   ├── audio.py            # Background music management
+│   ├── audio.py
 │   ├── camera.py
 │   ├── platform.py
 │   ├── player.py
@@ -63,55 +70,53 @@ tower-of-ie-wizard-climb/
 └── README.md
 ```
 
-This structure separates concerns clearly and makes the project easier to extend in the future. For example, new features such as additional sound effects or gameplay mechanics can be added without modifying unrelated modules.
+The modular design ensures separation of concerns and makes the project easy to extend with new features.
 
 ---
 
-## Environment Management (uv)
+## ⚙️ Environment Setup (uv)
 
 This project uses `uv` for dependency and virtual environment management.
 
-Create environment:
+Create the environment:
 
-```bash
+```bash id="o0yxaf"
 uv venv
 ```
 
 Install dependencies:
 
-```bash
+```bash id="z6r91f"
 uv add pygame
 ```
 
 Run the game:
 
-```bash
+```bash id="h0jv8k"
 uv run python main.py
 ```
 
 ---
 
-## Technical Focus
-
-This project demonstrates:
+## 🧠 Technical Highlights
 
 * Object-Oriented Programming in Python
 * Modular package architecture
 * Game loop design
-* Physics simulation (gravity and velocity systems)
-* Collision detection handling
-* Camera offset and world-to-screen transformations
-* JSON-based score persistence
+* Physics simulation (gravity & velocity)
+* Collision detection system
+* Camera abstraction (world-to-screen transformation)
+* JSON score persistence
 * Background music integration using `pygame.mixer`
-* Refactoring from monolithic script to structured package
+* Refactoring from monolithic script to scalable package
 
 ---
 
-## Author
+## 👨‍💻 Author
 
 Stephan Pentchev
 Master’s in Business Analytics and Data Science
 
-Developed as part of Python for Data Analysis II coursework project.
+Developed as part of a Python object-oriented programming coursework project.
 
 ---
