@@ -16,6 +16,10 @@
     "time": 15.584
   },
   {
+    "name": "str",
+    "time": 21.425
+  },
+  {
     "name": "Steph",
     "time": 21.811
   },
@@ -34,9 +38,5 @@
   {
     "name": "nAT",
     "time": 29.953
-  },
-  {
-    "name": "steph",
-    "time": 30.187
   }
 ]
