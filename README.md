@@ -55,7 +55,7 @@ The game features real-time physics, collision detection, dynamic platform creat
 
 **Score System** — Stores completion times in a JSON file, ranked by fastest time.
 
-**Audio System** — Initializes `pygame.mixer` and plays looping background music.
+**Audio System** — Uses the browser’s native `HTMLAudioElement` on web (bypasses SDL to avoid Chrome stuttering) and `pygame.mixer` on desktop.
 
 ---
 
@@ -64,29 +64,41 @@ The game features real-time physics, collision detection, dynamic platform creat
 ```text
 tower-of-ie-wizard-climb/
 │
-├── assets/                 # Backgrounds, sprites, fonts, music, scores.json
+├── assets/                          # Game assets
+│   ├── background.png               # Main gameplay background (defines world size)
+│   ├── first_screen.jpg             # Splash screen image
+│   ├── menu_background.png          # Menu screen background
+│   ├── scoreboard_background.png    # Scoreboard screen background
+│   ├── character still.png          # Player idle sprite
+│   ├── character running right.png  # Player run-right sprite
+│   ├── character running left.png   # Player run-left sprite
+│   ├── ByteBounce.ttf               # Arcade font
+│   ├── Rydeen.ogg                   # Background music (OGG for web compatibility)
+│   └── scores.json                  # Local scoreboard (top 10 best times)
 │
-├── game/                   # Main package
+├── game/                            # Main game package
 │   ├── __init__.py
-│   ├── settings.py
-│   ├── utils.py
-│   ├── scores.py
-│   ├── effects.py
-│   ├── audio.py
-│   ├── camera.py
-│   ├── platform.py
-│   ├── player.py
-│   ├── screens.py
-│   └── app.py
+│   ├── settings.py                  # Constants: resolution, FPS, file paths, game states
+│   ├── utils.py                     # Helpers: image loading, font, text drawing, time format
+│   ├── scores.py                    # Load/save scoreboard from scores.json
+│   ├── effects.py                   # Visual effects (goal glow)
+│   ├── audio.py                     # Audio system: native JS Audio on web, pygame.mixer on desktop
+│   ├── camera.py                    # World-to-screen coordinate transform + scrolling
+│   ├── platform.py                  # Platform rendering and collision rect
+│   ├── player.py                    # Physics, input, sprite animation, collision detection
+│   ├── screens.py                   # Splash, menu, name input, scoreboard screens
+│   └── app.py                       # GameApp: state machine, main loop, rendering pipeline
 │
-├── build/web/              # Pygbag web build output
-│   ├── index.html          # Patched HTML wrapper (do not overwrite without re-applying patches)
-│   ├── video_game_2.tar.gz # Packaged Python game files
-│   └── browserfs.min.js    # Bundled locally (CDN blocked by itch.io)
+├── build/web/                       # Pygbag web build output (generated — do not edit)
+│   ├── index.html                   # Auto-generated HTML/WASM wrapper
+│   ├── video_game_2.apk             # Game files packaged for itch.io
+│   ├── video_game_2.tar.gz          # Game files packaged for local dev server
+│   ├── Rydeen.ogg                   # Copied here post-build so JS Audio API can load it
+│   └── browserfs.min.js             # Virtual filesystem for the browser
 │
-├── main.py                 # Entry point (asyncio.run for Pygbag compatibility)
-├── pygbag.ini              # Pygbag build config
-├── pyproject.toml
+├── main.py                          # Entry point (asyncio.run for Pygbag compatibility)
+├── pygbag.ini                       # Pygbag build config and ignore list
+├── pyproject.toml                   # Project metadata and dependencies
 └── README.md
 ```
 
@@ -99,30 +111,22 @@ The game is compiled to WebAssembly using [Pygbag](https://pygame-web.github.io/
 ### Build command
 
 ```bash
-python -m pygbag --build .
+python -m pygbag --build main.py
 ```
 
-This regenerates `build/web/index.html` and `build/web/video_game_2.tar.gz`.
-
-### After every build, re-apply these patches to `build/web/index.html`
-
-1. **Line 1** — Add `devicePixelRatio=1` fix and set `data-os="vtx,gui"` (no `snd`)
-2. **Tarfile block** — Use `mode="r:*"` and remove the itch.zone APK detection block
-3. **embed.counter() loop** — Add 300-tick timeout to prevent infinite stall
-4. **UME block** — Remove entirely (no audio WASM loaded)
-5. **JS config** — Set `autorun:1`, `gui_divider:1`, `fb_width:"960"`, `fb_height:"540"`
-6. **CSS** — Canvas `width:100vw`, `height:100vh`, `outline:none`; body `background:black`
-7. **`custom_postrun`** — Add delayed resize events (500ms, 1500ms) to fix canvas sizing
-8. **`browserfs.min.js`** — Use local copy, not CDN
+This regenerates `build/web/index.html`, `build/web/video_game_2.apk`, and `build/web/video_game_2.tar.gz`.
 
 ### Package for itch.io upload
 
-```bash
-# From build/web/
-Compress-Archive -Path index.html,favicon.png,video_game_2.tar.gz,browserfs.min.js -DestinationPath ../../tower-of-ie-web.zip -Force
+```powershell
+# Copy the audio file so the browser can load it (it lives outside the .apk bundle)
+Copy-Item "assets\Rydeen.ogg" "build\web\Rydeen.ogg" -Force
+
+# Zip everything in build/web/
+Compress-Archive -Path "build\web\*" -DestinationPath "tower-of-ie-web.zip" -Force
 ```
 
-Upload `tower-of-ie-web.zip` to itch.io. Set viewport to **960 x 540**.
+Upload `tower-of-ie-web.zip` to itch.io.
 
 ---
 
@@ -134,7 +138,7 @@ Upload `tower-of-ie-web.zip` to itch.io. Set viewport to **960 x 540**.
 - Collision detection system
 - Camera abstraction (world-to-screen transformation)
 - JSON score persistence
-- Background music via `pygame.mixer`
+- Cross-platform audio: `HTMLAudioElement` on web, `pygame.mixer` on desktop
 - WebAssembly deployment via Pygbag
 
 ---
