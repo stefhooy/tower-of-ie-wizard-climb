@@ -17,7 +17,9 @@ def init_audio() -> None:
     global AUDIO_ENABLED
 
     try:
-        pygame.mixer.init()
+        # 44100 Hz matches Chrome's preferred Web Audio sample rate,
+        # avoiding the resampling artifacts that cause glitchy playback.
+        pygame.mixer.init(frequency=44100, size=-16, channels=2, buffer=512)
         AUDIO_ENABLED = True
     except pygame.error as e:
         print(f"[Audio disabled] Could not initialize mixer: {e}")
@@ -47,4 +49,4 @@ def stop_music() -> None:
     Stops currently playing music if audio is enabled.
     """
     if AUDIO_ENABLED:
-        pygame.mixer.music.stop()
+        pygame.mixer.music.fadeout(300)

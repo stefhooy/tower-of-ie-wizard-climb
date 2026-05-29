@@ -47,11 +47,15 @@ class GameApp:
     - drawing everything on screen
     """
     def __init__(self) -> None:
+        # pre_init must run before pygame.init() so the mixer is configured
+        # with 44100 Hz before the WASM audio context is created.
+        pygame.mixer.pre_init(44100, -16, 2, 512)
         pygame.init()
         self.screen = pygame.display.set_mode((SCREEN_W, SCREEN_H))
         pygame.display.set_caption(WINDOW_TITLE)
         init_audio()
-        play_music()
+        # Music is started later, after the first user interaction (splash screen),
+        # to satisfy Chrome's autoplay policy and prevent glitchy/blocked audio.
         #Used to control FPS and compute delta time (dt)
         self.clock = pygame.time.Clock()
         #Fonts used during the game (HUD + editor overlay)
@@ -101,6 +105,7 @@ class GameApp:
         This loop does not run gameplay directly. Instead, it delegates to the correct
         screen/state (menu, name input, scoreboard, gameplay).
         """
+        music_started = False
         while True:
             #Splash screen state
             if self.state == STATE_SPLASH:
@@ -108,6 +113,10 @@ class GameApp:
                 if next_state == "quit":
                     break
                 self.state = next_state
+                # Start music on the first user interaction (satisfies Chrome autoplay policy)
+                if not music_started:
+                    play_music()
+                    music_started = True
             #Menu state
             elif self.state == STATE_MENU:
                 next_state = await run_menu(self.screen, self.clock)
